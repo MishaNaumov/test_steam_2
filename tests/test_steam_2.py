@@ -50,7 +50,13 @@ def test_steam_search_game(driver):
         def create_dict():
             dict_game = {}
             n = 1
-            for game in range(10):
+            qty = 0
+            if item == "The Witcher":
+                qty = 10
+            elif item == "Fallout":
+                qty = 20
+
+            for game in range(qty):
                 dict_game[wait.until(EC.presence_of_element_located
                        ((By.XPATH, NAME_GAME.format(n)))).text] \
                     = wait.until(EC.presence_of_element_located
@@ -58,8 +64,8 @@ def test_steam_search_game(driver):
                 n += 1
 
             for game, price in dict_game.items():
-                dict_game[game] = float(price.replace(" руб", "")
-                                        .replace(" pуб.", "").replace(",", "."))
+                dict_game[game] = float(price.replace(" руб", "").
+                                        replace(" pуб.", "").replace(",", "."))
             return dict_game
 
         def sort_check():
@@ -73,6 +79,3 @@ def test_steam_search_game(driver):
             return True
 
         assert sort_check(), "The filter doesn't work correctly"
-
-
-

@@ -11,5 +11,4 @@ def driver():
         options.add_argument(item)
     web_chrome = webdriver.Chrome(options=options)
     web_chrome.get(JsonUtils.get_attribute("url_steam"))
-    web_chrome.maximize_window()
     return web_chrome
