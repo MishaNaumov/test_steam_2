@@ -1,10 +1,6 @@
 {
   "url_steam": "https://store.steampowered.com/",
   "timeout": 20,
-  "game": [
-    "The Witcher",
-    "Fallout"
-  ],
   "options": [
     "--lang=EN",
     "--window-size=1920,1080"
