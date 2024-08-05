@@ -1,21 +1,7 @@
 import pytest
-import selenium.common
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-from utils import JsonUtils
-
-UNIQUE_HOME_PAGE = "//*[@id='foryou_tab']//a[@class='pulldown_desktop']"
-WINDOW_SEARCH_ID = "store_nav_search_term"
-BUTTON_SEARCH = "//a[@id='store_search_link']//img"
-UNIQUE_SEARCH_PAGE = "//a[@id='sort_by_trigger']"
-FILTER = "//a[@id='sort_by_trigger']"
-HIGHEST_PRICE_ID = "Price_DESC"
-LOADING = "//*[@id='search_result_container' and @style]"
-NAME_GAME = "//*[@id='search_resultsRows']//a[{}]//span[@class='title']"
-PRICE_GAME = \
-    "//*[@id='search_resultsRows']//a[{}]//div[contains(text(),'уб') " \
-    "and not(@class='discount_original_price')]"
+from pages.base_page import BasePage
+from pages.home_page import HomePage
+from pages.store_page import StorePage
 
 
 @pytest.mark.parametrize(
@@ -27,57 +13,24 @@ PRICE_GAME = \
 )
 def test_steam_search_game(driver, param):
     name_game, qty = param
-    wait = WebDriverWait(driver, JsonUtils.get_attribute("timeout"))
 
-    def is_page_opened(locator):
-        try:
-            wait.until(EC.presence_of_element_located((By.XPATH, locator)))
-            return True
-        except selenium.common.TimeoutException:
-            return False
+    steam = BasePage(driver)
+    steam.open()
 
-    assert is_page_opened(UNIQUE_HOME_PAGE), "Home page not opened"
+    home_page = HomePage(driver)
+    store_page = StorePage(driver)
 
-    wait.until(EC.visibility_of_element_located((By.ID, WINDOW_SEARCH_ID)))\
-        .send_keys(name_game)
+    assert home_page.is_home_page_opened, "Home page not opened"
 
-    wait.until(EC.element_to_be_clickable((By.XPATH, BUTTON_SEARCH))).click()
+    home_page.search_enter(name_game)
+    home_page.click_search()
 
-    assert is_page_opened(UNIQUE_SEARCH_PAGE), "Store page not opened"
+    assert store_page.is_store_page_opened, "Store page not opened"
 
-    wait.until(EC.element_to_be_clickable((By.XPATH, FILTER))).click()
+    store_page.click_filter()
+    store_page.click_highest_price()
 
-    wait.until(EC.element_to_be_clickable((By.ID, HIGHEST_PRICE_ID))).click()
+    store_page.loading()
+    store_page.not_loading()
 
-    WebDriverWait(driver, timeout=JsonUtils.get_attribute("timeout"),
-                  poll_frequency=0.07)\
-        .until(EC.presence_of_element_located((By.XPATH, LOADING)))
-
-    wait.until_not(EC.presence_of_element_located((By.XPATH, LOADING)))
-
-    def create_dict():
-        dict_game = {}
-        n = 1
-
-        for game in range(qty):
-            dict_game[wait.until(EC.presence_of_element_located
-                                 ((By.XPATH, NAME_GAME.format(n)))).text] = \
-                wait.until(EC.presence_of_element_located
-                           ((By.XPATH, PRICE_GAME.format(n)))).text
-            n += 1
-
-        for game, price in dict_game.items():
-            dict_game[game] = float(price[:-4].replace(",", "."))
-        return dict_game
-
-    def sort_check():
-        temp_price = 1000000000000000000000
-
-        for price in create_dict().values():
-            if price <= temp_price:
-                temp_price = price
-            else:
-                return False
-        return True
-
-    assert sort_check(), "The filter doesn't work correctly"
+    assert store_page.sort_check(qty), "The filter doesn't work correctly"

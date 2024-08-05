@@ -10,5 +10,4 @@ def driver():
     for item in JsonUtils.get_attribute("options"):
         options.add_argument(item)
     web_chrome = webdriver.Chrome(options=options)
-    web_chrome.get(JsonUtils.get_attribute("url_steam"))
     return web_chrome
