@@ -1,7 +1,7 @@
 import pytest
-from pages.base_page import BasePage
 from pages.home_page import HomePage
 from pages.store_page import StorePage
+from utils.dict_games_utils import DictGamesUtils
 
 
 @pytest.mark.parametrize(
@@ -13,9 +13,6 @@ from pages.store_page import StorePage
 )
 def test_steam_search_game(driver, param):
     name_game, qty = param
-
-    steam = BasePage(driver)
-    steam.open()
 
     home_page = HomePage(driver)
     store_page = StorePage(driver)
@@ -33,4 +30,7 @@ def test_steam_search_game(driver, param):
     store_page.loading()
     store_page.not_loading()
 
-    assert store_page.sort_check(qty), "The filter doesn't work correctly"
+    dict_games = store_page.create_dict_games(qty)
+
+    assert DictGamesUtils.sort_check(dict_games), \
+        "The filter doesn't work correctly"

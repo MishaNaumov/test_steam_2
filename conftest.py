@@ -1,5 +1,5 @@
 from selenium.webdriver.chrome.options import Options
-from utils import JsonUtils
+from utils.json_utils import JsonUtils
 from singleton import WebDriver
 import pytest
 
@@ -9,5 +9,8 @@ def driver():
     options = Options()
     for item in JsonUtils.get_attribute("options"):
         options.add_argument(item)
-    web_chrome = WebDriver.get_driver(options)
-    return web_chrome
+    web_chrome = WebDriver(options)
+    web_chrome.get(JsonUtils.get_attribute("url_steam"))
+
+    yield web_chrome
+    WebDriver.quit()

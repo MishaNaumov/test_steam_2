@@ -6,9 +6,14 @@ class WebDriver:
 
     def __new__(cls, *args, **kwargs):
         if cls.__instance is None:
-            cls.__instance = super(WebDriver, cls).__new__(cls, *args, **kwargs)
+            cls.__instance = webdriver.Chrome(*args)
         return cls.__instance
 
-    @staticmethod
-    def get_driver(options):
-        return webdriver.Chrome(options)
+    @classmethod
+    def get_driver(cls):
+        return cls.__instance
+
+    @classmethod
+    def quit(cls):
+        cls.__instance.quit()
+        cls.__instance = None
