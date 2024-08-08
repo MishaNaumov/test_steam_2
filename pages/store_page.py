@@ -6,8 +6,8 @@ from utils.json_utils import JsonUtils
 
 
 class StorePage(BasePage):
-    UNIQUE_LOC = (By.XPATH, "//a[@id='sort_by_trigger']")
-    FILTER_SELECTOR = (By.XPATH, "//a[@id='sort_by_trigger']")
+    UNIQUE_LOC = (By.ID, "sort_by_trigger")
+    FILTER_SELECTOR = (By.ID, "sort_by_trigger")
     HIGHEST_PRICE_SELECTOR = (By.ID, "Price_DESC")
     LOADING_SELECTOR = (
     By.XPATH, "//*[@id='search_result_container' and @style]")
@@ -35,9 +35,6 @@ class StorePage(BasePage):
     def waiting_for_loading_to_be_lost(self):
         self.wait.until_not(EC.presence_of_element_located
                             (self.LOADING_SELECTOR))
-
-    def is_page_opened(self):
-        return super().is_page_opened()
 
     def create_dict_games(self, qty):
         dict_game = {}

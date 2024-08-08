@@ -5,7 +5,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
-    UNIQUE_LOC = None
+    UNIQUE_LOC = None # Should be overwritten!
 
     def __init__(self, driver):
         self.driver = driver
