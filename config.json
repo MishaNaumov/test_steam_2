@@ -1,0 +1,8 @@
+{
+  "url_steam": "https://store.steampowered.com/",
+  "timeout": 20,
+  "options": [
+    "--lang=EN",
+    "--window-size=1920,1080"
+  ]
+}
