@@ -5,7 +5,7 @@ class DictGamesUtils:
         for game, price in dict_game.items():
             special_dict_game[game] = float(price[:-4].replace(",", "."))
 
-        temp_price = 1000000000000000000000
+        temp_price = float("+inf")
 
         for price in special_dict_game.values():
             if price <= temp_price:

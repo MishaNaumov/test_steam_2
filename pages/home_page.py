@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 
 class HomePage(BasePage):
-    UNIQUE_HOME_PAGE_SELECTOR = \
+    UNIQUE_LOC = \
         (By.XPATH, "//*[@id='foryou_tab']//a[@class='pulldown_desktop']")
     SEARCH_FIELD_SELECTOR = (By.ID, "store_nav_search_term")
     BUTTON_SEARCH_SELECTOR = (By.XPATH, "//a[@id='store_search_link']//img")
@@ -18,5 +18,5 @@ class HomePage(BasePage):
         self.wait.until(
             EC.element_to_be_clickable(self.BUTTON_SEARCH_SELECTOR)).click()
 
-    def is_home_page_opened(self):
-        self.is_page_opened(self.UNIQUE_HOME_PAGE_SELECTOR)
+    def is_page_opened(self):
+        return super().is_page_opened()

@@ -6,7 +6,7 @@ from utils.json_utils import JsonUtils
 
 
 class StorePage(BasePage):
-    UNIQUE_SEARCH_PAGE_SELECTOR = (By.XPATH, "//a[@id='sort_by_trigger']")
+    UNIQUE_LOC = (By.XPATH, "//a[@id='sort_by_trigger']")
     FILTER_SELECTOR = (By.XPATH, "//a[@id='sort_by_trigger']")
     HIGHEST_PRICE_SELECTOR = (By.ID, "Price_DESC")
     LOADING_SELECTOR = (
@@ -26,22 +26,18 @@ class StorePage(BasePage):
         self.wait.until(
             EC.element_to_be_clickable(self.HIGHEST_PRICE_SELECTOR)).click()
 
-    def loading(self):
+    def waiting_for_loading(self):
         WebDriverWait(
             self.driver, timeout=JsonUtils.get_attribute("timeout"),
             poll_frequency=0.07)\
             .until(EC.presence_of_element_located(self.LOADING_SELECTOR))
 
-    def not_loading(self):
+    def waiting_for_loading_to_be_lost(self):
         self.wait.until_not(EC.presence_of_element_located
                             (self.LOADING_SELECTOR))
 
-    def is_store_page_opened(self):
-        self.is_page_opened(self.UNIQUE_SEARCH_PAGE_SELECTOR)
-
-    def presence_for_dict(self, locator):
-        return self.wait.until(EC.presence_of_element_located(
-            (By.XPATH, locator)))
+    def is_page_opened(self):
+        return super().is_page_opened()
 
     def create_dict_games(self, qty):
         dict_game = {}
@@ -49,8 +45,10 @@ class StorePage(BasePage):
 
         for game in range(qty):
             dict_game[
-                self.presence_for_dict(self.NAME_GAME_LOCATOR.format(n)).text
-            ] = self.presence_for_dict(self.PRICE_GAME_LOCATOR.format(n)).text
+                self.wait.until(EC.presence_of_element_located(
+                    (By.XPATH, self.NAME_GAME_LOCATOR.format(n)))).text
+            ] = self.wait.until(EC.presence_of_element_located(
+                (By.XPATH, self.PRICE_GAME_LOCATOR.format(n)))).text
             n += 1
 
         return dict_game

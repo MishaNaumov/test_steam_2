@@ -1,6 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 from utils.json_utils import JsonUtils
-from singleton import WebDriver
+from webdriver import WebDriver
 import pytest
 
 
